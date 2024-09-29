@@ -43,11 +43,11 @@ def addTask():
         rating = request.form.get('Rating')
         duration = request.form.get('time')
 
-        #---Debugging----
-        # print(f"Label: {label}")
-        # print(f"Dropdown 1: {category}")
-        # print(f"Dropdown 2: {subcategory}")
-        # print(f"Dropdown 3: {rating}")
+       # ---Debugging----
+        print(f"Label: {label}")
+        print(f"Dropdown 1: {category}")
+        print(f"Dropdown 2: {subcategory}")
+        print(f"Dropdown 3: {rating}")
 
 
         user.add_task(label, category, subcategory, rating, duration )
@@ -63,7 +63,14 @@ def addTask():
     user_stats = user.get_piechart()
     lbls = list(user_stats.keys())
     stat = list(user_stats.values())
-    return render_template('addTask.html', label_list=lbls, data_list=stat, todo_list={}) 
+
+    subcat_stats = user.get_subcategory_scores()
+    subcat_lbls = list(subcat_stats.keys())
+    subcat_stat = list(subcat_stats.values())
+
+    return render_template('addTask.html', label_list=lbls, data_list=stat, 
+                           bar_labels=subcat_lbls, bar_data=subcat_stat, 
+                           user_name=user.f_name, todo_list={}) 
 
 # Success page that takes the user's name
 @app.route('/success/')
