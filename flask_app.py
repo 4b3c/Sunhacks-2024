@@ -50,7 +50,7 @@ def addTask():
         # print(f"Dropdown 3: {rating}")
 
 
-        user.add_task(label, category, subcategory, rating )
+        user.add_task(label, category, subcategory, rating, duration )
 
 
         added = user.add_task(label, category, subcategory, rating, duration )
