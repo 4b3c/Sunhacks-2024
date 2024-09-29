@@ -54,7 +54,7 @@ def addTask():
 
         return redirect(url_for('addTask'))
     
-    user_stats = {"Health": 100, "Knowledge": 250, "Career": 80, "Gamer":400}
+    user_stats = user.get_piechart()
     lbls = list(user_stats.keys())
     stat = list(user_stats.values())
     return render_template('addTask.html', label_list=lbls, data_list=stat, todo_list={}) 

@@ -14,7 +14,7 @@ class Subcategory():
         score = 0
         for task in self.tasks:
             if task.finished or include_unfinished:
-                score += self.base_score + task.rating * self.base_score
+                score += self.base_score + int(task.rating) * self.base_score
         return score
     
     def get_tasks(self) -> dict:
@@ -31,10 +31,10 @@ class Category():
         Category.catagories.append(self)
     
     
-    def get_total(self):
+    def get_total(self, include_unfinished = False):
         total = 0
         for subcategory in self.subcategories:
-            total += subcategory.get_score()
+            total += self.subcategories[subcategory].get_score(include_unfinished)
 
         return total
     

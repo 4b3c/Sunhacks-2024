@@ -181,20 +181,20 @@
         </div>
         <div class="form-group">
           <label for="main_category">Category:</label>
-          <select id="main_category" name="Main Category" required>
-            <option value="">Select a category</option>
+          <select id="main_category" name="Main Category" onchange="updateOptions()" required>
+            <option value="" disabled selected>Select a category</option>
             <option value="Health">Health</option>
             <option value="Career">Career</option>
             <option value="Spirituality">Spirituality</option>
+            <option value="Environment">Environment</option>
+            <option value="Knowledge">Knowledge</option>
+            <option value="Relationships">Relationships</option>
           </select>
         </div>
         <div class="form-group">
           <label for="subcategory">Subcategory:</label>
           <select id="subcategory" name="Subcategory" required>
-            <option value="">Select a subcategory</option>
-            <option value="mental">sleep</option>
-            <option value="physical">physical</option>
-            <option value="sleep">physical</option>
+            <option value="" disabled selected>Select a subcategory</option>
           </select>
         </div>
         <div class="form-group">
@@ -228,6 +228,52 @@
     const modal = document.getElementById('myModal');
     const closeModal = document.getElementsByClassName('close')[0];
     const taskForm = document.getElementById('task-form');
+    const options = {
+      Health: [
+        { value: 'sleep', text: 'Sleep' },
+        { value: 'physical', text: 'Physical' },
+        { value: 'mental', text: 'Mental' }
+      ],
+      Career: [
+        { value: 'professional dev', text: 'Professional dev' },
+        { value: 'none', text: 'General' }
+      ],
+      Spirituality: [
+        { value: 'none', text: 'General' }
+      ],
+      Environment: [
+        { value: 'none', text: 'General' }
+      ],
+      Knowledge: [
+        { value: 'hard skills', text: 'Hard skills' },
+        { value: 'soft skills', text: 'Soft skills' }
+      ],
+      Relationships: [
+        { value: 'family', text: 'Family' },
+        { value: 'friends', text: 'Friends' },
+        { value: 'romantic', text: 'Romantic' }
+      ]
+    };
+
+    function updateOptions() {
+      const main_category = document.getElementById('main_category');
+      const subcategory = document.getElementById('subcategory');
+      const selectedCategory = main_category.value;
+
+      // Clear existing options in the second dropdown
+      subcategory.innerHTML = '<option value="" disabled selected>Select an item</option>';
+
+      // Populate the second dropdown with new options based on the selected category
+      if (selectedCategory && options[selectedCategory]) {
+        options[selectedCategory].forEach(option => {
+          const newOption = document.createElement('option');
+          newOption.value = option.value;
+          newOption.text = option.text;
+          subcategory.appendChild(newOption);
+        });
+      }
+    }
+
 
     // Function to open the modal
     addTaskButton.onclick = function () {
@@ -281,7 +327,7 @@
       data: {
         labels: {{ label_list | tojson }},
     datasets: [{
-      label: 'My First Dataset',
+      label: 'Equilibrium',
       data: {{ data_list | tojson }},
       backgroundColor: [
       '#1A2229',
