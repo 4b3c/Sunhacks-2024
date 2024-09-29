@@ -61,41 +61,28 @@
 
     ul {
       list-style: none;
-      /* Remove default list styles */
       padding: 0;
-      /* Remove padding */
     }
 
     li {
       display: flex;
-      /* Flexbox for alignment */
       align-items: center;
-      /* Center items vertically */
       margin: 10px 0;
-      /* Margin for spacing between tasks */
     }
 
     .checkbox {
       width: 20px;
-      /* Set the width of the checkbox */
       height: 20px;
-      /* Set the height of the checkbox */
       cursor: pointer;
-      /* Change cursor to pointer on hover */
       flex: 1;
     }
 
     input[type="text"] {
       border: none;
-      /* Remove border */
       border-bottom: 1px solid #ccc;
-      /* Underline style */
       width: 100%;
-      /* Full width */
       outline: none;
-      /* Remove default outline */
       padding: 5px;
-      /* Padding for input */
       flex: 4;
       background-color: #F0F0FF;
       margin-right: 20px;
@@ -103,29 +90,59 @@
 
     input[type="text"]:focus {
       border-bottom-color: blue;
-      /* Change underline color on focus */
     }
 
     button {
       background-color: #28a745;
-      /* Green background */
       color: white;
-      /* White text */
       border: none;
-      /* No border */
       padding: 10px 15px;
-      /* Padding */
       cursor: pointer;
-      /* Pointer cursor on hover */
       margin-top: 10px;
-      /* Margin for spacing */
       font-size: 16px;
-      /* Font size */
     }
 
     button:hover {
       background-color: #218838;
-      /* Darker green on hover */
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -152,12 +169,85 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form id="task-form">
+        <div class="form-group">
+          <label for="nameField">Name:</label>
+          <input type="text" id="nameField" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="main_category">Category:</label>
+          <select id="main_category" name="Main Category" required>
+            <option value="">Select a category</option>
+            <option value="Health">Health</option>
+            <option value="Career">Career</option>
+            <option value="Spirituality">Spirituality</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="subcategory">Subcategory:</label>
+          <select id="subcategory" name="Subcategory" required>
+            <option value="">Select a subcategory</option>
+            <option value="Mind">Mind</option>
+            <option value="Body">Body</option>
+            <option value="Sleep">Sleep</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rating">Rating (1-10):</label>
+          <select id="rating" name="Rating" required>
+            <option value="">Select a rating</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="datetimeField">Choose Date & Time:</label>
+          <input type="datetime-local" id="datetimeField" name="datetime" required>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
   <script>
     const todoList = document.getElementById('todo-list');
     const addTaskButton = document.getElementById('add-task-btn');
+    const modal = document.getElementById('myModal');
+    const closeModal = document.getElementsByClassName('close')[0];
+    const taskForm = document.getElementById('task-form');
+
+    // Function to open the modal
+    addTaskButton.onclick = function () {
+      modal.style.display = 'block';
+    }
+
+    // Function to close the modal
+    closeModal.onclick = function () {
+      modal.style.display = 'none';
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    }
 
     // Function to add a new task
-    function addTask() {
+    function addTask(taskName) {
       const listItem = document.createElement('li');
 
       const checkbox = document.createElement('input');
@@ -166,20 +256,22 @@
 
       const input = document.createElement('input');
       input.type = 'text';
-      input.placeholder = 'New Task'; // Placeholder for new task
+      input.value = taskName; // Set the value from the form
+      input.readOnly = true; // Make it read-only after adding
 
       listItem.appendChild(checkbox);
       listItem.appendChild(input);
       todoList.insertBefore(listItem, todoList.firstChild); // Insert at the top
     }
 
-    // Initial creation of 10 tasks
-    for (let i = 0; i < 10; i++) {
-      addTask();
-    }
-
-    // Add event listener to the button
-    addTaskButton.addEventListener('click', addTask);
+    // Handle form submission
+    taskForm.onsubmit = function (event) {
+      event.preventDefault(); // Prevent form submission
+      const taskName = document.getElementById('nameField').value; // Get task name
+      addTask(taskName); // Add task to the list
+      modal.style.display = 'none'; // Close the modal
+      taskForm.reset(); // Reset the form
+    };
 
     // Pie Chart
     const ctx = document.getElementById('pieChart').getContext('2d');
@@ -214,7 +306,7 @@
             text: 'Pie Chart Example'
           }
         }
-      }
+      },
     });
   </script>
 </body>
