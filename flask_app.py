@@ -17,15 +17,16 @@ def login():
         user = request.form['nm']  # Get the input from the form
         password = request.form['pw']
         try: #Check if user already exists
-            with open('file.json', 'r') as file:
+            with open('user_data.json', 'r') as file:
                 user_data = json.load(file)
                 user = user_data["user_obj"]
+                print(user)
 
         except FileNotFoundError: # Create a new user
             user_data = {
                 "username": user,
                 "passphrase": password,
-                "user_obj": classes.User(f_name=user,l_name=user,password=password)
+                "user_obj": classes.User(f_name=user,l_name=user,password=password).__dict__
             }
             with open('user_data.json', 'w') as json_file:
                 json.dump(user_data, json_file)
