@@ -23,7 +23,7 @@ class Subcategory():
 
 class Category():
     catagories = []
-    def __init__(self, name:str, subcatagories:list[Subcategory]):
+    def __init__(self, name:str, subcatagories:dict[str: Subcategory]):
         self.name = name
         self.subcategories = subcatagories
         self.general = Subcategory('', base_score=1)
@@ -39,7 +39,13 @@ class Category():
         return total
     
     def get_tasks(self):
-        return {task: task for subcategory in self.subcategories for task in subcategory.get_tasks() }
+        tasks = {}
+        for subcategory in self.subcategories:
+            for task in self.subcategories[subcategory].get_tasks():
+                print(subcategory)
+                tasks[task] = self.subcategories[subcategory].get_tasks()[task]
+        print(tasks)
+        return tasks
     
 
 
@@ -150,10 +156,10 @@ class User():
                 'Career': self.career.get_total()}
     
     def get_tasks(self):
-        return {self.health.get_tasks() +
-                self.relationships.get_tasks() +
-                self.environment.get_tasks() +
-                self.knowledge.get_tasks() +
-                self.spirituality.get_tasks() +
-                self.career.get_tasks()}
+        return {**self.health.get_tasks(),
+                **self.relationships.get_tasks(),
+                **self.environment.get_tasks(),
+                **self.knowledge.get_tasks(),
+                **self.spirituality.get_tasks(),
+                **self.career.get_tasks()}
             

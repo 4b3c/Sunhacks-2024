@@ -50,6 +50,7 @@ def addTask():
         print(f"Date and Time: {type(datetime)}")
 
         user.add_task(label, category, subcategory, rating )
+        print(user.get_tasks())
 
         return redirect(url_for('addTask'))
     
