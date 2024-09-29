@@ -1,4 +1,4 @@
-import json
+import pickle
 from flask import Flask, redirect, url_for, jsonify, request, render_template
 from flask_cors import CORS
 import classes
@@ -14,22 +14,20 @@ def index():
 def login():
     global user
     if request.method == 'POST':
-        user = request.form['nm']  # Get the input from the form
+        name = request.form['nm']  # Get the input from the form
         password = request.form['pw']
         try: #Check if user already exists
-            with open('user_data.json', 'r') as file:
-                user_data = json.load(file)
-                user = classes.User(**user_data["user_obj"])
+            with open(f'{name}.pkl', 'rb') as file:
+                user = pickle.load(file)
+                print(f"user already exists: {user}")
 
         except FileNotFoundError: # Create a new user
-            user = classes.User(f_name=user,l_name=user,password=password)
-            user_data = {
-                "username": user,
-                "passphrase": password,
-                "user_obj": user.__dict__
-            }
-            with open('user_data.json', 'w') as json_file:
-                json.dump(user_data, json_file)
+            
+            user = classes.User(f_name=name,l_name=name,password=password)
+            print(f"user doesnt exist, creating: {user}")
+
+            with open(f'{name}.pkl', 'wb') as pickle_file:
+                pickle.dump(user, pickle_file)
 
         return redirect(url_for('addTask'))
     return render_template('login.html') 
@@ -43,29 +41,29 @@ def addTask():
         category = request.form.get('Main Category')
         subcategory = request.form.get('Subcategory')
         rating = request.form.get('Rating')
-<<<<<<< Updated upstream
-        datetime = request.form.get('datetime')
-        print(user)
-=======
         duration = request.form.get('time')
->>>>>>> Stashed changes
 
+        #---Debugging----
         # print(f"Label: {label}")
         # print(f"Dropdown 1: {category}")
         # print(f"Dropdown 2: {subcategory}")
         # print(f"Dropdown 3: {rating}")
 
-<<<<<<< Updated upstream
+
         user.add_task(label, category, subcategory, rating )
-=======
+
 
         added = user.add_task(label, category, subcategory, rating, duration )
         print(f"Task was added?: {added}")
         print(user.get_subcategory_scores())
->>>>>>> Stashed changes
+
 
         return redirect(url_for('addTask'))
-    return render_template('addTask.html') 
+    
+    user_stats = user.get_piechart()
+    lbls = list(user_stats.keys())
+    stat = list(user_stats.values())
+    return render_template('addTask.html', label_list=lbls, data_list=stat, todo_list={}) 
 
 # Success page that takes the user's name
 @app.route('/success/')

@@ -14,19 +14,20 @@ class Subcategory():
     def get_score(self, include_unfinished):
         score = 0
         for task in self.tasks:
-<<<<<<< Updated upstream
-            if task.finished == True or include_unfinished:
-                score += self.base_score + task.rating * self.base_score
-=======
+
             if task.finished or include_unfinished:
                 score += sqrt(task.duration) * (self.base_score + int(task.rating) * 0.5*self.base_score)
->>>>>>> Stashed changes
+
         return score
+    
+
+    def get_tasks(self) -> dict:
+        return {task.label: task for task in self.tasks}
             
 
 class Category():
     catagories = []
-    def __init__(self, name:str, subcatagories):
+    def __init__(self, name:str, subcatagories:dict[str: Subcategory]):
         self.name = name
         self.subcategories = subcatagories
         self.general = Subcategory('', base_score=1)
@@ -34,12 +35,25 @@ class Category():
         Category.catagories.append(self)
     
     
-    def get_total(self):
+    def get_total(self, include_unfinished = False):
         total = 0
+        total += self.general.get_score(include_unfinished)
         for subcategory in self.subcategories:
-            total += subcategory.get_score()
+            total += self.subcategories[subcategory].get_score(include_unfinished)
 
         return total
+    
+    def get_tasks(self):
+        tasks = {}
+        for subcategory in self.subcategories:
+            for task in self.subcategories[subcategory].get_tasks():
+                tasks[task] = self.subcategories[subcategory].get_tasks()[task]
+            # For the General subclass
+        for task in self.general.get_tasks():
+            print(task)
+            tasks[task] =  self.general.get_tasks()[task]
+        
+        return tasks
     
 
 
@@ -69,7 +83,7 @@ class Environment(Category):
 
 class Knowledge_Wisdom(Category):
     def __init__(self):
-        Category.__init__(self, name='Knowledge/Wisdom', subcatagories= {
+        Category.__init__(self, name='Knowledge', subcatagories= {
                             'soft skills': Subcategory('soft skills', 1),
                             'hard skills': Subcategory('hard skills', 1),
                             })
@@ -125,28 +139,24 @@ class User():
         for main_category in Category.catagories:
             if main_category.name == category:
                 #Add to the general list if the task doesnt have a sub category
-                if sub_category is None:
-                    task = Task(label=label, category=main_category, subcategory=main_category.general, 
-<<<<<<< Updated upstream
-                    date=None, finished=True, rating=rating)
-                    print(task)
-=======
+                if sub_category == 'none':
+                    task = Task(label=label, category=main_category, subcategory=main_category.general,
                     duration=float(duration), finished=True, rating=rating)
->>>>>>> Stashed changes
+
                     main_category.general.tasks.append(task)
+                    return True
                 
                 #Add to the subtask object if it does exist
                 else:
                     for sub in main_category.subcategories.values():
                         if sub.name == sub_category:
                             task = Task(label=label, category=main_category, subcategory=sub, 
-<<<<<<< Updated upstream
-                            date=None, finished=True, rating=rating)
-                            print(task)
-=======
                             duration=float(duration), finished=True, rating=rating)
->>>>>>> Stashed changes
+
                             sub.tasks.append(task)
+                            return True
+        
+        return False
     
     def get_piechart(self, completed=True):
         return {'Health': self.health.get_total(),
@@ -155,4 +165,21 @@ class User():
                 'Knowledge': self.knowledge.get_total(),
                 'Spirituality': self.spirituality.get_total(),
                 'Career': self.career.get_total()}
+    
+
+    def get_subcategory_scores(self):
+        sub_cat_scores = {}
+        for main_category in Category.catagories:
+            for sub_name in main_category.subcategories:
+                sub_cat_scores[sub_name] = main_category.subcategories[sub_name].get_score(False)
+        return sub_cat_scores
+    #ex output: {'physical': 0, 'mental': 0, 'sleep': 7, 'family': 0, 'friends': 3, 'professional development': 0, 'work': 0}
+    
+    def get_tasks(self):
+        return {**self.health.get_tasks(),
+                **self.relationships.get_tasks(),
+                **self.environment.get_tasks(),
+                **self.knowledge.get_tasks(),
+                **self.spirituality.get_tasks(),
+                **self.career.get_tasks()}
             

@@ -1,12 +1,166 @@
 <!DOCTYPE html>
-<html>
-   <body>
-      <form action="{{ url_for('login') }}" method="post">
-         <p>Enter Name:</p>
-         <p><input type = "text" name = "nm" /></p>
-         <p>Enter Login Info</p>
-         <p><input type = "password" name = "pw" /></p>
-         <p><input type = "submit" value = "submit" /></p>
-      </form>
-   </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Monarcha&display=swap" rel="stylesheet"> <!-- Import Monarcha font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> <!-- Import Poppins font -->
+    <style>
+        /* Base styling */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1A2229;
+            font-family: 'Poppins', sans-serif; /* Use Poppins for the body text */
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative; /* Make body position relative for absolute positioning of logo */
+        }
+
+        .background-logo {
+            position: absolute; /* Position logo absolutely */
+            top: 50%; /* Center it vertically */
+            left: 50%; /* Center it horizontally */
+            transform: translate(-50%, -50%); /* Adjust positioning to be centered */
+            width: 650px; /* Set width of the background logo */
+            opacity: 0.50; /* Make the logo slightly transparent */
+            z-index: 1; /* Ensure it's behind the form */
+        }
+
+        /* New styling for the Equilibrium text */
+        .title {
+            position: absolute;
+            bottom: 20px; /* Adjust bottom positioning */
+            right: 20px; /* Adjust right positioning */
+            font-family: 'Poppins', sans-serif; /* Use Monarcha font */
+            font-size: 28px; /* Set font size */
+            color: #88BBA2; /* Set font color */
+            z-index: 3; /* Ensure it's above everything else */
+        }
+
+        form {
+            background: linear-gradient(135deg, #3B6064, #55828B);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            color: #FFFFFF;
+            z-index: 2; /* Ensure the form is above both logos */
+        }
+
+        p {
+            margin-bottom: 8px; /* Adjust margin to reduce space between question and input */
+            font-size: 16px;
+        }
+
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 12px; /* Adjust padding for smaller input boxes */
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"], input[type="password"] {
+            background-color: #88BBA2; /* Text box normal state */
+            color: #1A2229;
+            margin-bottom: 12px; /* Reduced space between input boxes */
+        }
+
+        input[type="text"]::placeholder, input[type="password"]::placeholder {
+            color: #757575;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            background-color: #C9E4CA;
+            box-shadow: 0 0 15px rgba(169, 204, 169, 0.7);
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background: #88BBA2;
+            color: gray; /* Set initial font color to gray */
+            cursor: not-allowed; /* Indicate that the button is not clickable */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 5px rgba(85, 130, 139, 0.5); /* Initial subtle glow */
+            margin-top: 20px; /* Add space above the submit button */
+        }
+
+        input[type="submit"].enabled {
+            color: #1A2229; /* Change font color when enabled */
+            cursor: pointer; /* Change cursor to pointer when enabled */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #C9E4CA; /* Darken to the same color as text boxes */
+            box-shadow: 0 0 15px rgba(136, 187, 162, 0.7); /* Glow effect on hover */
+        }
+
+        input[type="submit"]:active {
+            background-color: #A7CCA9;
+        }
+
+        input[type="submit"]:focus {
+            outline: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            form {
+                padding: 20px;
+            }
+
+            input[type="text"], input[type="password"], input[type="submit"] {
+                font-size: 14px;
+            }
+
+            .background-logo {
+                width: 150px; /* Smaller background logo for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='noTextLogo1.png') }}" alt="Background Logo" class="background-logo" />
+    <div class="title">Equilibrium</div> <!-- Added Equilibrium text -->
+    <form action="{{ url_for('login') }}" method="post">
+        <p>Enter Username:</p>
+        <p><input type="text" id="username" name="nm" placeholder="Username" required /></p>
+        <p>Enter Password:</p>
+        <p><input type="password" id="password" name="pw" placeholder="Password" required /></p>
+        <p><input type="submit" id="submit" value="Submit" disabled /></p>
+    </form>
+
+    <script>
+        // Get references to the input fields and the submit button
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const submitButton = document.getElementById('submit');
+
+        // Function to toggle button state
+        function toggleButtonState() {
+            if (usernameInput.value && passwordInput.value) {
+                submitButton.classList.add('enabled');
+                submitButton.disabled = false; // Enable the button
+            } else {
+                submitButton.classList.remove('enabled');
+                submitButton.disabled = true; // Disable the button
+            }
+        }
+
+        // Add event listeners for input fields
+        usernameInput.addEventListener('input', toggleButtonState);
+        passwordInput.addEventListener('input', toggleButtonState);
+    </script>
+</body>
 </html>
