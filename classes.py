@@ -1,7 +1,7 @@
 from enum import Enum
 import datetime
 
-class SubCatagory():
+class Subcategory():
     def __init__(self, name:str, base_score):
         assert type(name) == str
         self.name = name
@@ -18,14 +18,14 @@ class SubCatagory():
         return score
             
 
-class Catagory():
+class Category():
     catagories = []
     def __init__(self, name:str, subcatagories):
         self.name = name
         self.subcategories = subcatagories
-        self.general = SubCatagory('', base_score=1)
+        self.general = Subcategory('', base_score=1)
 
-        Catagory.catagories.append(self)
+        Category.catagories.append(self)
     
     
     def get_total(self):
@@ -36,63 +36,64 @@ class Catagory():
         return total
     
 
-    
 
-
-class Health(Catagory):
+class Health(Category):
     def __init__(self):
-        Catagory.__init__(self, name='Health', subcatagories= {
-                            'physical': SubCatagory('physical', 1),
-                            'mental': SubCatagory('mental', 1),
-                            'sleep': SubCatagory('sleep', 1),
+        Category.__init__(self, name='Health', subcatagories= {
+                            'physical': Subcategory('physical', 1),
+                            'mental': Subcategory('mental', 1),
+                            'sleep': Subcategory('sleep', 1),
                             })
 
 
+class Relationships(Category):
+    def __init__(self):
+        Category.__init__(self, name='Relationships', subcatagories= {
+                            'family': Subcategory('family', 1),
+                            'friends': Subcategory('friends', 1),
+                            'romantic': Subcategory('romantic', 1),
+                            })
 
-class Relationships(Catagory):
-     def __init__(self):
-         Catagory.__init__(self, name='Relationships')
-         self.subcatagories = {'family': 1,
-                          'friends': 1,
-                          'romantic': 1,
-                          }
 
-
-class Environment(Catagory):
-     def __init__(self):
-         Catagory.__init__(self, name='Health')
-         self.subcatagories = {}
+class Environment(Category):
+    def __init__(self):
+        Category.__init__(self, name='Environment', subcatagories= {})
 
 
 
-class Knowledge_Wisdom(Catagory):
-     def __init__(self):
-         Catagory.__init__(self, name='Knowledge/Wisdom')
-         self.subcatagories = {
-                               "Soft Skills": 1,
-                               "Hard Skills": 1}
+class Knowledge_Wisdom(Category):
+    def __init__(self):
+        Category.__init__(self, name='Knowledge/Wisdom', subcatagories= {
+                            'soft skills': Subcategory('soft skills', 1),
+                            'hard skills': Subcategory('hard skills', 1),
+                            })
 
 
-class Spirituality(Catagory):
-     def __init__(self):
-         Catagory.__init__(self, name='Spirituality')
+class Spirituality(Category):
+    def __init__(self):
+        Category.__init__(self, name='Spirituality', subcatagories= {})
 
 
-class Career(Catagory):
-     def __init__(self):
-         Catagory.__init__(self, name='Career')
-         self.subcatagories = {
-                               "Professional development": 1,
-                               "Work": 1,}
-class task():
-    def __init__(self, label:str, catagory:Catagory, subCatagory, date:datetime.datetime, finished:bool, rating=0):
+class Career(Category):
+    def __init__(self):
+        Category.__init__(self, name='Career', subcatagories= {
+                            'professional development': Subcategory('professional development', 1),
+                            'work': Subcategory('work', 1),
+                            })
+class Task():
+    def __init__(self, label:str, category:Category, subcategory:Subcategory, date:datetime.datetime, finished:bool, rating=0):
         self.label = label
-        self.catagory = catagory
-        self.subCatagory = subCatagory
+        self.category = category
+        self.subCategory = subcategory
         self.date = date
         self.finished = finished
         self.rating = rating
 
+
+    def __repr__(self):
+        return f'''A Task of Label: {self.label}\n
+                Category: {self.category.name}\n
+                subCategory: {self.subCategory.name}\n'''
 
 class User():
     '''
@@ -102,6 +103,42 @@ class User():
         self.f_name = f_name
         self.l_name = l_name
         self.password = password
+
+        self.health = Health()
+        self.relationships = Relationships()
+        self.environment = Environment()
+        self.knowledge = Knowledge_Wisdom()
+        self.spirituality = Spirituality()
+        self.career = Career()
     
     def __repr__(self) -> str:
-        return f"{self.fname} A current user"
+        return f"{self.f_name} A current user"
+    
+
+    def add_task(self, label:str, category:str, sub_category:str, rating:str):
+        for main_category in Category.catagories:
+            if main_category.name == category:
+                #Add to the general list if the task doesnt have a sub category
+                if sub_category is None:
+                    task = Task(label=label, category=main_category, subcategory=main_category.general, 
+                    date=None, finished=True, rating=rating)
+                    print(task)
+                    main_category.general.tasks.append(task)
+                
+                #Add to the subtask object if it does exist
+                else:
+                    for sub in main_category.subcategories.values():
+                        if sub.name == sub_category:
+                            task = Task(label=label, category=main_category, subcategory=sub, 
+                            date=None, finished=True, rating=rating)
+                            print(task)
+                            sub.tasks.append(task)
+    
+    def get_piechart(self, completed=True):
+        return {'Health': self.health.get_total(),
+                'Relationships': self.relationships.get_total(),
+                'Environment': self.environment.get_total(),
+                'Knowledge': self.knowledge.get_total(),
+                'Spirituality': self.spirituality.get_total(),
+                'Career': self.career.get_total()}
+            
