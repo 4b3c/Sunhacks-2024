@@ -1,48 +1,144 @@
 <!DOCTYPE html>
-<html>
-  <body>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centered Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      /* Ensures consistent width calculations */
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1A2229;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    label {
+      font-size: 18px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    select {
+      width: 100%;
+      /* Ensures full width */
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    input[type="text"]:focus,
+    input[type="datetime-local"]:focus,
+    select:focus {
+      border-color: #5e9dd3;
+      outline: none;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      background-color: #87BBA2;
+      color: white;
+      padding: 14px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #55828B;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
     <form action="{{ url_for('addTask') }}" method="post">
-      <!-- Text Field -->
-      <label for="nameField">Name:</label>
-      <input type="text" id="nameField" name="name"><br><br>
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="nameField">Name:</label>
+        <input type="text" id="nameField" name="name" required>
+      </div>
 
-      <!-- Dropdown Box 1 -->
-      <label for="dropdown1">Category:</label>
-      <select id="main_category" name="Main Category">
-        <option value="Health">Health</option>
-        <option value="Career">Career</option>
-        <option value="Spirituality">Spirituality</option>
-      </select><br><br>
+      <!-- Category Dropdown -->
+      <div class="form-group">
+        <label for="main_category">Category:</label>
+        <select id="main_category" name="Main Category" required>
+          <option value="">Select a category</option>
+          <option value="Health">Health</option>
+          <option value="Career">Career</option>
+          <option value="Spirituality">Spirituality</option>
+        </select>
+      </div>
 
-      <!-- Dropdown Box 2 -->
-      <label for="dropdown2">subcategory:</label>
-      <select id="subcategory" name="Subcategory">
-        <option value="Mind">Mind</option>
-        <option value="Body">Body</option>
-        <option value="Sleep">Sleep</option>
-      </select><br><br>
+      <!-- Subcategory Dropdown -->
+      <div class="form-group">
+        <label for="subcategory">Subcategory:</label>
+        <select id="subcategory" name="Subcategory" required>
+          <option value="">Select a subcategory</option>
+          <option value="Mind">Mind</option>
+          <option value="Body">Body</option>
+          <option value="Sleep">Sleep</option>
+        </select>
+      </div>
 
-      <!-- Dropdown Box 3 -->
-      <label for="Rating">Option 3:</label>
-      <select id="rating" name="Rating">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="3">6</option>
-        <option value="1">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-      </select><br><br>
+      <!-- Rating Dropdown -->
+      <div class="form-group">
+        <label for="rating">Rating (1-10):</label>
+        <select id="rating" name="Rating" required>
+          <option value="">Select a rating</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
 
       <!-- DateTime Field -->
-      <label for="datetimeField">Choose Date & Time:</label>
-      <input type="datetime-local" id="datetimeField" name="datetime"><br><br>
+      <div class="form-group">
+        <label for="datetimeField">Choose Date & Time:</label>
+        <input type="datetime-local" id="datetimeField" name="datetime" required>
+      </div>
 
       <!-- Submit Button -->
       <input type="submit" value="Submit">
     </form>
-  </body>
+  </div>
+</body>
+
 </html>
