@@ -17,7 +17,7 @@ class Subcategory():
                 score += self.base_score + int(task.rating) * self.base_score
         return score
     
-    
+
     def get_tasks(self) -> dict:
         return {task.label: task for task in self.tasks}
             
@@ -160,6 +160,15 @@ class User():
                 'Knowledge': self.knowledge.get_total(),
                 'Spirituality': self.spirituality.get_total(),
                 'Career': self.career.get_total()}
+    
+
+    def get_subcategory_scores(self):
+        sub_cat_scores = {}
+        for main_category in Category.catagories:
+            for sub_name in main_category.subcategories:
+                sub_cat_scores[sub_name] = main_category.subcategories[sub_name].get_score(False)
+        return sub_cat_scores
+    #ex output: {'physical': 0, 'mental': 0, 'sleep': 7, 'family': 0, 'friends': 3, 'professional development': 0, 'work': 0}
     
     def get_tasks(self):
         return {**self.health.get_tasks(),
