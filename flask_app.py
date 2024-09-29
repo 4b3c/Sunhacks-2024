@@ -41,18 +41,22 @@ def addTask():
         category = request.form.get('Main Category')
         subcategory = request.form.get('Subcategory')
         rating = request.form.get('Rating')
-        datetime = request.form.get('datetime')
+        duration = request.form.get('time')
 
         #---Debugging----
         # print(f"Label: {label}")
         # print(f"Dropdown 1: {category}")
         # print(f"Dropdown 2: {subcategory}")
         # print(f"Dropdown 3: {rating}")
-        # print(f"Date and Time: {type(datetime)}")
 
-        added = user.add_task(label, category, subcategory, rating )
+
+        user.add_task(label, category, subcategory, rating, duration )
+
+
+        added = user.add_task(label, category, subcategory, rating, duration )
         print(f"Task was added?: {added}")
         print(user.get_subcategory_scores())
+
 
         return redirect(url_for('addTask'))
     
