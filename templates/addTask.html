@@ -28,6 +28,14 @@
       /* Ensure it's behind the form */
     }
 
+    .avatar-image {
+    width: 90px; /* Increase the size */
+    height: 90px; /* Maintain aspect ratio */
+    border-radius: 50%; /* Make it circular */
+    border: 4px solid #1A2229; /* Blue border */
+    padding: 5px; /* Add some padding around */
+    }
+
     .content {
       display: flex;
       flex-grow: 1;
@@ -167,8 +175,11 @@
   </header>
   <div class="content">
     <div class="left">
-      <h2>Avatar</h2>
-      <img src="https://via.placeholder.com/100" alt="Avatar" />
+      <h2>{{ user_name | tojson }}</h2>
+      <img src="{{ url_for('static', filename='avatar_nobackground.png') }}" alt="Avatar" class="avatar-image" />
+
+      <h2>Top Subcategories</h2>
+        <canvas id="barChart"></canvas>
     </div>
     <div class="middle">
       <h2>Pie Chart</h2>
@@ -378,6 +389,36 @@
       }
     },
 });
+
+
+    // Horizontal Bar Chart
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: {{ bar_labels | tojson }}, // Labels for the bars
+        datasets: [{
+          label: 'Top Sub Catagories',
+          data: {{ bar_data | tojson }}, // Example data
+          backgroundColor: '#88BBA2', // Bar color
+          borderColor: '#3B6064',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'y', // Horizontal bar
+        scales: {
+          x: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
 
   </script>
 </body>

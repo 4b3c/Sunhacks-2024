@@ -97,7 +97,7 @@ class Spirituality(Category):
 class Career(Category):
     def __init__(self):
         Category.__init__(self, name='Career', subcatagories= {
-                            'professional development': Subcategory('professional development', 1),
+                            'professional dev': Subcategory('professional dev', 1),
                             'work': Subcategory('work', 1),
                             })
 class Task():
