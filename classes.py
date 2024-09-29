@@ -17,6 +17,7 @@ class Subcategory():
                 score += self.base_score + int(task.rating) * self.base_score
         return score
     
+    
     def get_tasks(self) -> dict:
         return {task.label: task for task in self.tasks}
             
@@ -33,6 +34,7 @@ class Category():
     
     def get_total(self, include_unfinished = False):
         total = 0
+        total += self.general.get_score(include_unfinished)
         for subcategory in self.subcategories:
             total += self.subcategories[subcategory].get_score(include_unfinished)
 
@@ -42,9 +44,12 @@ class Category():
         tasks = {}
         for subcategory in self.subcategories:
             for task in self.subcategories[subcategory].get_tasks():
-                print(subcategory)
                 tasks[task] = self.subcategories[subcategory].get_tasks()[task]
-        print(tasks)
+            # For the General subclass
+        for task in self.general.get_tasks():
+            print(task)
+            tasks[task] =  self.general.get_tasks()[task]
+        
         return tasks
     
 
@@ -75,7 +80,7 @@ class Environment(Category):
 
 class Knowledge_Wisdom(Category):
     def __init__(self):
-        Category.__init__(self, name='Knowledge/Wisdom', subcatagories= {
+        Category.__init__(self, name='Knowledge', subcatagories= {
                             'soft skills': Subcategory('soft skills', 1),
                             'hard skills': Subcategory('hard skills', 1),
                             })
@@ -131,11 +136,11 @@ class User():
         for main_category in Category.catagories:
             if main_category.name == category:
                 #Add to the general list if the task doesnt have a sub category
-                if sub_category is None:
+                if sub_category == 'none':
                     task = Task(label=label, category=main_category, subcategory=main_category.general, 
                     date=None, finished=True, rating=rating)
-                    print(task)
                     main_category.general.tasks.append(task)
+                    return True
                 
                 #Add to the subtask object if it does exist
                 else:
@@ -143,9 +148,10 @@ class User():
                         if sub.name == sub_category:
                             task = Task(label=label, category=main_category, subcategory=sub, 
                             date=None, finished=True, rating=rating)
-                            print(task)
                             sub.tasks.append(task)
-                            break
+                            return True
+        
+        return False
     
     def get_piechart(self, completed=True):
         return {'Health': self.health.get_total(),

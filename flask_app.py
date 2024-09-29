@@ -49,7 +49,8 @@ def addTask():
         print(f"Dropdown 3: {rating}")
         print(f"Date and Time: {type(datetime)}")
 
-        user.add_task(label, category, subcategory, rating )
+        added = user.add_task(label, category, subcategory, rating )
+        print(f"Task was added?: {added}")
         print(user.get_tasks())
 
         return redirect(url_for('addTask'))
