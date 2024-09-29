@@ -1,5 +1,6 @@
 from enum import Enum
 import datetime
+from math import sqrt
 
 class Subcategory():
     def __init__(self, name:str, base_score):
@@ -13,8 +14,13 @@ class Subcategory():
     def get_score(self, include_unfinished):
         score = 0
         for task in self.tasks:
+<<<<<<< Updated upstream
             if task.finished == True or include_unfinished:
                 score += self.base_score + task.rating * self.base_score
+=======
+            if task.finished or include_unfinished:
+                score += sqrt(task.duration) * (self.base_score + int(task.rating) * 0.5*self.base_score)
+>>>>>>> Stashed changes
         return score
             
 
@@ -81,11 +87,11 @@ class Career(Category):
                             'work': Subcategory('work', 1),
                             })
 class Task():
-    def __init__(self, label:str, category:Category, subcategory:Subcategory, date:datetime.datetime, finished:bool, rating=0):
+    def __init__(self, label:str, category:Category, subcategory:Subcategory, duration:float, finished:bool, rating=0):
         self.label = label
         self.category = category
         self.subCategory = subcategory
-        self.date = date
+        self.duration = duration
         self.finished = finished
         self.rating = rating
 
@@ -115,14 +121,18 @@ class User():
         return f"{self.f_name} A current user"
     
 
-    def add_task(self, label:str, category:str, sub_category:str, rating:str):
+    def add_task(self, label:str, category:str, sub_category:str, rating:str, duration:str):
         for main_category in Category.catagories:
             if main_category.name == category:
                 #Add to the general list if the task doesnt have a sub category
                 if sub_category is None:
                     task = Task(label=label, category=main_category, subcategory=main_category.general, 
+<<<<<<< Updated upstream
                     date=None, finished=True, rating=rating)
                     print(task)
+=======
+                    duration=float(duration), finished=True, rating=rating)
+>>>>>>> Stashed changes
                     main_category.general.tasks.append(task)
                 
                 #Add to the subtask object if it does exist
@@ -130,8 +140,12 @@ class User():
                     for sub in main_category.subcategories.values():
                         if sub.name == sub_category:
                             task = Task(label=label, category=main_category, subcategory=sub, 
+<<<<<<< Updated upstream
                             date=None, finished=True, rating=rating)
                             print(task)
+=======
+                            duration=float(duration), finished=True, rating=rating)
+>>>>>>> Stashed changes
                             sub.tasks.append(task)
     
     def get_piechart(self, completed=True):

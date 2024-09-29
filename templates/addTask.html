@@ -171,6 +171,7 @@
   </div>
 
   <!-- Modal -->
+<<<<<<< Updated upstream
   <div id="myModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -220,6 +221,68 @@
         <button type="submit">Submit</button>
       </form>
     </div>
+=======
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form id="task-form" action="{{ url_for('addTask') }}" method="post">
+      <div class="form-group">
+        <label for="nameField">Name:</label>
+        <input type="text" id="nameField" name="name" required class="styled-input">
+      </div>
+      <div class="form-group">
+        <label for="main_category">Category:</label>
+        <select id="main_category" name="Main Category" onchange="updateOptions()" required class="styled-select">
+          <option value="" disabled selected>Select a category</option>
+          <option value="Health">Health</option>
+          <option value="Career">Career</option>
+          <option value="Spirituality">Spirituality</option>
+          <option value="Environment">Environment</option>
+          <option value="Knowledge">Knowledge</option>
+          <option value="Relationships">Relationships</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="subcategory">Subcategory:</label>
+        <select id="subcategory" name="Subcategory" required class="styled-select">
+          <option value="" disabled selected>Select a subcategory</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating (1-10):</label>
+        <select id="rating" name="Rating" required class="styled-select">
+          <option value="">Select a rating</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="time">Time (0-5):</label>
+        <select id="time" name="time" required class="styled-select">
+          <option value="">Select a duration (hrs)</option>
+          <option value="0.5">0.5</option>
+          <option value="1">1</option>
+          <option value="1.5">1.5</option>
+          <option value="2">2</option>
+          <option value="2.5">2.5</option>
+          <option value="3">3</option>
+          <option value="3.5">3.5</option>
+          <option value="4">4</option>
+          <option value="4.5">4.5</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <button type="submit" class="styled-button">Submit</button>
+    </form>
+>>>>>>> Stashed changes
   </div>
 
   <script>

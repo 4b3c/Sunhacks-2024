@@ -43,16 +43,26 @@ def addTask():
         category = request.form.get('Main Category')
         subcategory = request.form.get('Subcategory')
         rating = request.form.get('Rating')
+<<<<<<< Updated upstream
         datetime = request.form.get('datetime')
         print(user)
+=======
+        duration = request.form.get('time')
+>>>>>>> Stashed changes
 
         # print(f"Label: {label}")
         # print(f"Dropdown 1: {category}")
         # print(f"Dropdown 2: {subcategory}")
         # print(f"Dropdown 3: {rating}")
-        # print(f"Date and Time: {type(datetime)}")
 
+<<<<<<< Updated upstream
         user.add_task(label, category, subcategory, rating )
+=======
+
+        added = user.add_task(label, category, subcategory, rating, duration )
+        print(f"Task was added?: {added}")
+        print(user.get_subcategory_scores())
+>>>>>>> Stashed changes
 
         return redirect(url_for('addTask'))
     return render_template('addTask.html') 
