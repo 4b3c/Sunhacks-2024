@@ -1,6 +1,4 @@
-import json
 import pickle
-import jsonpickle
 from flask import Flask, redirect, url_for, jsonify, request, render_template
 from flask_cors import CORS
 import classes

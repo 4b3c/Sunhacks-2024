@@ -174,7 +174,7 @@
   <div id="myModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <form action="{{ url_for('addTask') }}" method="post">
+      <form id="task-form" action="{{ url_for('addTask') }}" method="post">
         <div class="form-group">
           <label for="nameField">Name:</label>
           <input type="text" id="nameField" name="name" required>
@@ -266,11 +266,12 @@
 
     // Handle form submission
     taskForm.onsubmit = function (event) {
-      event.preventDefault(); // Prevent form submission
+      //event.preventDefault(); // Prevent form submission #}
       const taskName = document.getElementById('nameField').value; // Get task name
       addTask(taskName); // Add task to the list
       modal.style.display = 'none'; // Close the modal
-      taskForm.reset(); // Reset the form
+      //taskForm.reset(); // Reset the form
+
     };
 
     // Pie Chart
