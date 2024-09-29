@@ -86,21 +86,6 @@
       flex: 1;
     }
 
-    input[type="text"] {
-      border: none;
-      border-bottom: 1px solid #ccc;
-      width: 100%;
-      outline: none;
-      padding: 5px;
-      flex: 4;
-      background-color: #F0F0FF;
-      margin-right: 20px;
-    }
-
-    input[type="text"]:focus {
-      border-bottom-color: blue;
-    }
-
     button {
       background-color: #28a745;
       color: white;
@@ -125,23 +110,84 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.6);
+      /* Darker overlay */
       padding-top: 60px;
     }
 
     .modal-content {
-      background-color: #fefefe;
+      background: linear-gradient(135deg, #3B6064, #55828B);
+      /* Match form background gradient */
       margin: 5% auto;
-      padding: 20px;
-      border: 1px solid #888;
+      padding: 30px;
+      border-radius: 15px;
+      /* Match rounded corners */
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
       width: 80%;
-      max-width: 500px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      /* Adjust max width */
+      color: #FFFFFF;
+      /* Text color */
+    }
+
+    .styled-input,
+    .styled-select {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      /* Match input fields */
+      font-size: 16px;
+      margin-bottom: 12px;
+      /* Space between inputs */
+      background-color: #88BBA2;
+      /* Background color for inputs */
+      color: #1A2229;
+      /* Text color for inputs */
+    }
+
+    .styled-input::placeholder,
+    .styled-select::placeholder {
+      box-sizing: border-box;
+      color: #757575;
+      /* Placeholder color */
+    }
+
+    .styled-input:focus,
+    .styled-select:focus {
+      box-sizing: border-box;
+      background-color: #C9E4CA;
+      /* Focus state */
+      box-shadow: 0 0 15px rgba(169, 204, 169, 0.7);
+      outline: none;
+    }
+
+    .styled-button {
+      background: #88BBA2;
+      color: #1A2229;
+      /* Font color for button */
+      border: none;
+      padding: 12px 20px;
+      /* Adjust padding for button */
+      border-radius: 8px;
+      /* Match button corners */
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 10px;
+      /* Space above button */
+    }
+
+    .styled-button:hover {
+      background-color: #C9E4CA;
+      /* Darken on hover */
+      box-shadow: 0 0 15px rgba(136, 187, 162, 0.7);
+      /* Glow effect */
     }
 
     .close {
-      color: #aaa;
+      color: #FFFFFF;
+      /* Close button color */
       float: right;
       font-size: 28px;
       font-weight: bold;
@@ -149,7 +195,8 @@
 
     .close:hover,
     .close:focus {
-      color: black;
+      color: #FFCC00;
+      /* Change close button color on hover */
       text-decoration: none;
       cursor: pointer;
     }
@@ -192,9 +239,7 @@
       <form id="task-form" action="{{ url_for('addTask') }}" method="post">
         <div class="form-group">
           <label for="nameField">Name:</label>
-          <input type="text" id="nameField" name="name" required class="styled-input">
-        </div>
-        <div class="form-group">
+          <input type="text" id="nameField" name="name" required class="styled-input" placeholder="Task Name">
           <label for="main_category">Category:</label>
           <select id="main_category" name="Main Category" onchange="updateOptions()" required class="styled-select">
             <option value="" disabled selected>Select a category</option>
@@ -205,14 +250,10 @@
             <option value="Knowledge">Knowledge</option>
             <option value="Relationships">Relationships</option>
           </select>
-        </div>
-        <div class="form-group">
           <label for="subcategory">Subcategory:</label>
           <select id="subcategory" name="Subcategory" required class="styled-select">
             <option value="" disabled selected>Select a subcategory</option>
           </select>
-        </div>
-        <div class="form-group">
           <label for="rating">Rating (1-10):</label>
           <select id="rating" name="Rating" required class="styled-select">
             <option value="">Select a rating</option>
@@ -227,8 +268,6 @@
             <option value="9">9</option>
             <option value="10">10</option>
           </select>
-        </div>
-        <div class="form-group">
           <label for="time">Time (0-5):</label>
           <select id="time" name="time" required class="styled-select">
             <option value="">Select a duration (hrs)</option>
@@ -247,160 +286,162 @@
         <button type="submit" class="styled-button">Submit</button>
       </form>
     </div>
+  </div>
 
-    <script>
-      const todoList = document.getElementById('todo-list');
-      const addTaskButton = document.getElementById('add-task-btn');
-      const modal = document.getElementById('myModal');
-      const closeModal = document.getElementsByClassName('close')[0];
-      const taskForm = document.getElementById('task-form');
-      const options = {
-        Health: [
-          { value: 'sleep', text: 'Sleep' },
-          { value: 'physical', text: 'Physical' },
-          { value: 'mental', text: 'Mental' }
-        ],
-        Career: [
-          { value: 'professional dev', text: 'Professional dev' },
-          { value: 'none', text: 'General' }
-        ],
-        Spirituality: [
-          { value: 'none', text: 'General' }
-        ],
-        Environment: [
-          { value: 'none', text: 'General' }
-        ],
-        Knowledge: [
-          { value: 'hard skills', text: 'Hard skills' },
-          { value: 'soft skills', text: 'Soft skills' }
-        ],
-        Relationships: [
-          { value: 'family', text: 'Family' },
-          { value: 'friends', text: 'Friends' },
-          { value: 'romantic', text: 'Romantic' }
-        ]
-      };
 
-      function updateOptions() {
-        const main_category = document.getElementById('main_category');
-        const subcategory = document.getElementById('subcategory');
-        const selectedCategory = main_category.value;
+  <script>
+    const todoList = document.getElementById('todo-list');
+    const addTaskButton = document.getElementById('add-task-btn');
+    const modal = document.getElementById('myModal');
+    const closeModal = document.getElementsByClassName('close')[0];
+    const taskForm = document.getElementById('task-form');
+    const options = {
+      Health: [
+        { value: 'sleep', text: 'Sleep' },
+        { value: 'physical', text: 'Physical' },
+        { value: 'mental', text: 'Mental' }
+      ],
+      Career: [
+        { value: 'professional dev', text: 'Professional dev' },
+        { value: 'none', text: 'General' }
+      ],
+      Spirituality: [
+        { value: 'none', text: 'General' }
+      ],
+      Environment: [
+        { value: 'none', text: 'General' }
+      ],
+      Knowledge: [
+        { value: 'hard skills', text: 'Hard skills' },
+        { value: 'soft skills', text: 'Soft skills' }
+      ],
+      Relationships: [
+        { value: 'family', text: 'Family' },
+        { value: 'friends', text: 'Friends' },
+        { value: 'romantic', text: 'Romantic' }
+      ]
+    };
 
-        // Clear existing options in the second dropdown
-        subcategory.innerHTML = '<option value="" disabled selected>Select an item</option>';
+    function updateOptions() {
+      const main_category = document.getElementById('main_category');
+      const subcategory = document.getElementById('subcategory');
+      const selectedCategory = main_category.value;
 
-        // Populate the second dropdown with new options based on the selected category
-        if (selectedCategory && options[selectedCategory]) {
-          options[selectedCategory].forEach(option => {
-            const newOption = document.createElement('option');
-            newOption.value = option.value;
-            newOption.text = option.text;
-            subcategory.appendChild(newOption);
-          });
-        }
+      // Clear existing options in the second dropdown
+      subcategory.innerHTML = '<option value="" disabled selected>Select an item</option>';
+
+      // Populate the second dropdown with new options based on the selected category
+      if (selectedCategory && options[selectedCategory]) {
+        options[selectedCategory].forEach(option => {
+          const newOption = document.createElement('option');
+          newOption.value = option.value;
+          newOption.text = option.text;
+          subcategory.appendChild(newOption);
+        });
       }
+    }
 
 
-      // Function to open the modal
-      addTaskButton.onclick = function () {
-        modal.style.display = 'block';
-      }
+    // Function to open the modal
+    addTaskButton.onclick = function () {
+      modal.style.display = 'block';
+    }
 
-      // Function to close the modal
-      closeModal.onclick = function () {
+    // Function to close the modal
+    closeModal.onclick = function () {
+      modal.style.display = 'none';
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function (event) {
+      if (event.target === modal) {
         modal.style.display = 'none';
       }
+    }
 
-      // Close the modal when clicking outside of it
-      window.onclick = function (event) {
-        if (event.target === modal) {
-          modal.style.display = 'none';
-        }
-      }
+    // Function to add a new task
+    function addTask(taskName) {
+      const listItem = document.createElement('li');
 
-      // Function to add a new task
-      function addTask(taskName) {
-        const listItem = document.createElement('li');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'checkbox';
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'checkbox';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = taskName; // Set the value from the form
+      input.readOnly = true; // Make it read-only after adding
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = taskName; // Set the value from the form
-        input.readOnly = true; // Make it read-only after adding
+      listItem.appendChild(checkbox);
+      listItem.appendChild(input);
+      todoList.insertBefore(listItem, todoList.firstChild); // Insert at the top
+    }
 
-        listItem.appendChild(checkbox);
-        listItem.appendChild(input);
-        todoList.insertBefore(listItem, todoList.firstChild); // Insert at the top
-      }
+    // Handle form submission
+    taskForm.onsubmit = function (event) {
+      //event.preventDefault(); // Prevent form submission #}
+      const taskName = document.getElementById('nameField').value; // Get task name
+      addTask(taskName); // Add task to the list
+      modal.style.display = 'none'; // Close the modal
+      //taskForm.reset(); // Reset the form
 
-      // Handle form submission
-      taskForm.onsubmit = function (event) {
-        //event.preventDefault(); // Prevent form submission #}
-        const taskName = document.getElementById('nameField').value; // Get task name
-        addTask(taskName); // Add task to the list
-        modal.style.display = 'none'; // Close the modal
-        //taskForm.reset(); // Reset the form
+    };
 
-      };
-
-      // Pie Chart
-      const ctx = document.getElementById('pieChart').getContext('2d');
-      const pieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: {{ label_list | tojson }},
-      datasets: [{
-        label: 'Equilibrium',
-        data: {{ data_list | tojson }},
-        backgroundColor: [
-        '#3B6064',
-        '#55828B',
-        '#88BBA2',
-        '#A7CCA9',
-        '#C9E4CA',
-        '#FFFFFF'
-      ],
-        borderWidth: 1
+    // Pie Chart
+    const ctx = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: {{ label_list | tojson }},
+    datasets: [{
+      label: 'Equilibrium',
+      data: {{ data_list | tojson }},
+      backgroundColor: [
+      '#3B6064',
+      '#55828B',
+      '#88BBA2',
+      '#A7CCA9',
+      '#C9E4CA',
+      '#FFFFFF'
+    ],
+      borderWidth: 1
     }]
   },
-      options: {
-        responsive: true,
-          plugins: {
-          legend: {
-            display: false
+    options: {
+      responsive: true,
+        plugins: {
+        legend: {
+          display: false
+        },
+        datalabels: {
+          color: '#fff',  // Label text color
+            font: {
+            size: 14,  // Set the font size (you can adjust this value)
+              weight: 'bold'  // Optional: set the font weight
           },
-          datalabels: {
-            color: '#fff',  // Label text color
-              font: {
-              size: 14,  // Set the font size (you can adjust this value)
-                weight: 'bold'  // Optional: set the font weight
-            },
-            formatter: (value, context) => {
-              // Get the category label from the data
-              const label = context.chart.data.labels[context.dataIndex];
+          formatter: (value, context) => {
+            // Get the category label from the data
+            const label = context.chart.data.labels[context.dataIndex];
 
-              // If value is 0, don't display the label
-              if (value === 0) {
-                return '';  // Return an empty string
-              }
-
-              let total = context.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);  // Calculate total
-              let percentage = ((value / total) * 100).toFixed(2);  // Get percentage
-
-              // Return both the category label and the percentage
-              return `${label}: ${percentage}%`;
+            // If value is 0, don't display the label
+            if (value === 0) {
+              return '';  // Return an empty string
             }
+
+            let total = context.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);  // Calculate total
+            let percentage = ((value / total) * 100).toFixed(2);  // Get percentage
+
+            // Return both the category label and the percentage
+            return `${label}: ${percentage}%`;
           }
         }
-      },
-      plugins: [ChartDataLabels]  // Register the DataLabels plugin
+      }
+    },
+    plugins: [ChartDataLabels]  // Register the DataLabels plugin
     });
 
 
-    </script>
+  </script>
 </body>
 
 </html>
