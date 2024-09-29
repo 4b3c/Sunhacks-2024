@@ -133,6 +133,7 @@ class User():
                             date=None, finished=True, rating=rating)
                             print(task)
                             sub.tasks.append(task)
+                            break
     
     def get_piechart(self, completed=True):
         return {'Health': self.health.get_total(),
