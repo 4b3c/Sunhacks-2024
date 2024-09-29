@@ -4,141 +4,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Centered Form</title>
+  <title>Dynamic To-Do List</title>
   <style>
-    * {
-      box-sizing: border-box;
-      /* Ensures consistent width calculations */
-    }
-
     body {
       font-family: Arial, sans-serif;
-      background-color: #1A2229;
+      display: flex;
       margin: 0;
       height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
     }
 
-    .form-container {
-      background-color: #ffffff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 500px;
+    header {
+      background-color: #3B6064;
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .content {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .left,
+    .middle,
+    .right {
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .left {
+      width: 25%;
+      background-color: #f0f0f0;
       text-align: center;
     }
 
-    label {
-      font-size: 18px;
-      font-weight: bold;
-      display: block;
-      margin-bottom: 8px;
-      color: #333;
+    .middle {
+      width: 50%;
+      background-color: #e0e0e0;
     }
 
-    input[type="text"],
-    input[type="datetime-local"],
-    select {
-      width: 100%;
-      /* Ensures full width */
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 18px;
+    .right {
+      width: 25%;
+      background-color: #d0d0d0;
     }
 
-    input[type="text"]:focus,
-    input[type="datetime-local"]:focus,
-    select:focus {
-      border-color: #5e9dd3;
-      outline: none;
+    #pieChart {
+      max-width: 100%;
+      height: 300px;
     }
 
-    input[type="submit"] {
-      width: 100%;
-      background-color: #87BBA2;
-      color: white;
-      padding: 14px;
-      font-size: 20px;
-      border: none;
-      border-radius: 8px;
+    .todo-container {
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    ul {
+      list-style: none;
+      /* Remove default list styles */
+      padding: 0;
+      /* Remove padding */
+    }
+
+    li {
+      display: flex;
+      /* Flexbox for alignment */
+      align-items: center;
+      /* Center items vertically */
+      margin: 10px 0;
+      /* Margin for spacing between tasks */
+    }
+
+    .checkbox {
+      width: 20px;
+      /* Set the width of the checkbox */
+      height: 20px;
+      /* Set the height of the checkbox */
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      /* Change cursor to pointer on hover */
+      flex: 1;
     }
 
-    input[type="submit"]:hover {
-      background-color: #55828B;
+    input[type="text"] {
+      border: none;
+      /* Remove border */
+      border-bottom: 1px solid #ccc;
+      /* Underline style */
+      width: 100%;
+      /* Full width */
+      outline: none;
+      /* Remove default outline */
+      padding: 5px;
+      /* Padding for input */
+      flex: 4;
+      background-color: #F0F0FF;
+      margin-right: 20px;
     }
 
-    .form-group {
-      margin-bottom: 25px;
+    input[type="text"]:focus {
+      border-bottom-color: blue;
+      /* Change underline color on focus */
+    }
+
+    button {
+      background-color: #28a745;
+      /* Green background */
+      color: white;
+      /* White text */
+      border: none;
+      /* No border */
+      padding: 10px 15px;
+      /* Padding */
+      cursor: pointer;
+      /* Pointer cursor on hover */
+      margin-top: 10px;
+      /* Margin for spacing */
+      font-size: 16px;
+      /* Font size */
+    }
+
+    button:hover {
+      background-color: #218838;
+      /* Darker green on hover */
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-  <div class="form-container">
-    <form action="{{ url_for('addTask') }}" method="post">
-      <!-- Name Field -->
-      <div class="form-group">
-        <label for="nameField">Name:</label>
-        <input type="text" id="nameField" name="name" required>
+  <header>
+    <h2 style="margin-left: 3%;">My Dashboard</h2>
+  </header>
+  <div class="content">
+    <div class="left">
+      <h2>Avatar</h2>
+      <img src="https://via.placeholder.com/100" alt="Avatar" />
+    </div>
+    <div class="middle">
+      <h2>Pie Chart</h2>
+      <canvas id="pieChart"></canvas>
+    </div>
+    <div class="right">
+      <h2>To-Do List</h2>
+      <button id="add-task-btn">Add Task</button>
+      <div id="todo-container" class="todo-container">
+        <ul id="todo-list"></ul>
       </div>
-
-      <!-- Category Dropdown -->
-      <div class="form-group">
-        <label for="main_category">Category:</label>
-        <select id="main_category" name="Main Category" required>
-          <option value="">Select a category</option>
-          <option value="Health">Health</option>
-          <option value="Career">Career</option>
-          <option value="Spirituality">Spirituality</option>
-        </select>
-      </div>
-
-      <!-- Subcategory Dropdown -->
-      <div class="form-group">
-        <label for="subcategory">Subcategory:</label>
-        <select id="subcategory" name="Subcategory" required>
-          <option value="">Select a subcategory</option>
-          <option value="Mind">Mind</option>
-          <option value="Body">Body</option>
-          <option value="Sleep">Sleep</option>
-        </select>
-      </div>
-
-      <!-- Rating Dropdown -->
-      <div class="form-group">
-        <label for="rating">Rating (1-10):</label>
-        <select id="rating" name="Rating" required>
-          <option value="">Select a rating</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
-      </div>
-
-      <!-- DateTime Field -->
-      <div class="form-group">
-        <label for="datetimeField">Choose Date & Time:</label>
-        <input type="datetime-local" id="datetimeField" name="datetime" required>
-      </div>
-
-      <!-- Submit Button -->
-      <input type="submit" value="Submit">
-    </form>
+    </div>
   </div>
+  <script>
+    const todoList = document.getElementById('todo-list');
+    const addTaskButton = document.getElementById('add-task-btn');
+
+    // Function to add a new task
+    function addTask() {
+      const listItem = document.createElement('li');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'checkbox';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'New Task'; // Placeholder for new task
+
+      listItem.appendChild(checkbox);
+      listItem.appendChild(input);
+      todoList.insertBefore(listItem, todoList.firstChild); // Insert at the top
+    }
+
+    // Initial creation of 10 tasks
+    for (let i = 0; i < 10; i++) {
+      addTask();
+    }
+
+    // Add event listener to the button
+    addTaskButton.addEventListener('click', addTask);
+
+    // Pie Chart
+    const ctx = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow'],
+        datasets: [{
+          label: 'My First Dataset',
+          data: [300, 50, 100],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Pie Chart Example'
+          }
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
