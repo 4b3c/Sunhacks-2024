@@ -13,14 +13,17 @@ class Subcategory():
     def get_score(self, include_unfinished):
         score = 0
         for task in self.tasks:
-            if task.finished == True or include_unfinished:
+            if task.finished or include_unfinished:
                 score += self.base_score + task.rating * self.base_score
         return score
+    
+    def get_tasks(self) -> dict:
+        return {task.label: task for task in self.tasks}
             
 
 class Category():
     catagories = []
-    def __init__(self, name:str, subcatagories):
+    def __init__(self, name:str, subcatagories:list[Subcategory]):
         self.name = name
         self.subcategories = subcatagories
         self.general = Subcategory('', base_score=1)
@@ -34,6 +37,9 @@ class Category():
             total += subcategory.get_score()
 
         return total
+    
+    def get_tasks(self):
+        return {task: task for subcategory in self.subcategories for task in subcategory.get_tasks() }
     
 
 
@@ -141,4 +147,12 @@ class User():
                 'Knowledge': self.knowledge.get_total(),
                 'Spirituality': self.spirituality.get_total(),
                 'Career': self.career.get_total()}
+    
+    def get_tasks(self):
+        return {self.health.get_tasks() +
+                self.relationships.get_tasks() +
+                self.environment.get_tasks() +
+                self.knowledge.get_tasks() +
+                self.spirituality.get_tasks() +
+                self.career.get_tasks()}
             
