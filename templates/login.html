@@ -1,12 +1,107 @@
 <!DOCTYPE html>
-<html>
-   <body>
-      <form action="{{ url_for('login') }}" method="post">
-         <p>Enter Name:</p>
-         <p><input type = "text" name = "nm" /></p>
-         <p>Enter Login Info</p>
-         <p><input type = "password" name = "pw" /></p>
-         <p><input type = "submit" value = "submit" /></p>
-      </form>
-   </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        /* Base styling */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1A2229;
+            font-family: 'Poppins', sans-serif;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background: linear-gradient(135deg, #3B6064, #55828B);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            color: #FFFFFF;
+        }
+
+        p {
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"], input[type="password"] {
+            background-color: #88BBA2; /* Text box normal state */
+            color: #1A2229;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]::placeholder, input[type="password"]::placeholder {
+            color: #1A2229;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            background-color: #C9E4CA;
+            box-shadow: 0 0 15px rgba(169, 204, 169, 0.7);
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background: linear-gradient(135deg, #C9E4CA, #A7CCA9);
+            color: #1A2229;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 5px rgba(85, 130, 139, 0.5); /* Initial subtle glow */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #88BBA2; /* Darken to the same color as text boxes */
+            box-shadow: 0 0 15px rgba(136, 187, 162, 0.7); /* Glow effect on hover */
+        }
+
+        input[type="submit"]:active {
+            background-color: #A7CCA9;
+        }
+
+        input[type="submit"]:focus {
+            outline: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            form {
+                padding: 20px;
+            }
+
+            input[type="text"], input[type="password"], input[type="submit"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="{{ url_for('login') }}" method="post">
+        <p>Enter Username:</p>
+        <p><input type="text" name="nm" placeholder="Username" /></p>
+        <p>Enter Password:</p>
+        <p><input type="password" name="pw" placeholder="Password" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+</body>
 </html>
