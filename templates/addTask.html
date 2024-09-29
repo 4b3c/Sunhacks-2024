@@ -15,10 +15,17 @@
     }
 
     header {
-      background-color: #3B6064;
-      color: white;
+      background-color: #1A2229;
+      color: #88BBA2;
       padding: 10px;
       text-align: left;
+    }
+
+    .logo {
+      width: 60px;
+      /* Set width of the background logo */
+      z-index: 1;
+      /* Ensure it's behind the form */
     }
 
     .content {
@@ -31,7 +38,9 @@
     .right {
       padding: 20px;
       box-sizing: border-box;
+      text-align: center;
     }
+
 
     .left {
       width: 25%;
@@ -150,7 +159,11 @@
 
 <body>
   <header>
-    <h2 style="margin-left: 3%;">My Dashboard</h2>
+    <div style="display:flex; flex-direction:row; margin-left:2%;">
+      <img src="{{ url_for('static', filename='noTextLogo1.png') }}" alt="Logo" class="logo" />
+      <h2 class="title" style="margin-left:2%;">Equilibrium Dashboard</h2>
+    </div>
+
   </header>
   <div class="content">
     <div class="left">
