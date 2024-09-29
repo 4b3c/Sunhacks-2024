@@ -54,7 +54,11 @@ def addTask():
         user.add_task(label, category, subcategory, rating )
 
         return redirect(url_for('addTask'))
-    return render_template('addTask.html') 
+    
+    user_stats = {"Health": 100, "Knowledge": 250, "Career": 80, "Gamer":400}
+    lbls = list(user_stats.keys())
+    stat = list(user_stats.values())
+    return render_template('addTask.html', label_list=lbls, data_list=stat, todo_list={}) 
 
 # Success page that takes the user's name
 @app.route('/success/')
