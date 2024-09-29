@@ -6,27 +6,27 @@ app = Flask(__name__)
 CORS(app)
 
 user = None
-
 @app.route('/')
 def index():
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global user
     if request.method == 'POST':
         user = request.form['nm']  # Get the input from the form
         password = request.form['pw']
         try: #Check if user already exists
             with open('user_data.json', 'r') as file:
                 user_data = json.load(file)
-                user = user_data["user_obj"]
-                print(user)
+                user = classes.User(**user_data["user_obj"])
 
         except FileNotFoundError: # Create a new user
+            user = classes.User(f_name=user,l_name=user,password=password)
             user_data = {
                 "username": user,
                 "passphrase": password,
-                "user_obj": classes.User(f_name=user,l_name=user,password=password).__dict__
+                "user_obj": user.__dict__
             }
             with open('user_data.json', 'w') as json_file:
                 json.dump(user_data, json_file)
@@ -34,23 +34,27 @@ def login():
         return redirect(url_for('addTask'))
     return render_template('login.html') 
 
+
 @app.route('/taskboard', methods=['GET', 'POST'])
 def addTask():
+    global user
     if request.method == 'POST':
-        name = request.form.get('name')
-        dropdown1 = request.form.get('Main Category')
-        dropdown2 = request.form.get('Subcategory')
-        dropdown3 = request.form.get('Rating')
-        datetime = request.form.get('datetime')  # From 'datetimeField' ID
+        label = request.form.get('name')
+        category = request.form.get('Main Category')
+        subcategory = request.form.get('Subcategory')
+        rating = request.form.get('Rating')
+        datetime = request.form.get('datetime')
+        print(user)
 
-        # Process the data (for now, just print it)
-        print(f"Name: {name}")
-        print(f"Dropdown 1: {dropdown1}")
-        print(f"Dropdown 2: {dropdown2}")
-        print(f"Dropdown 3: {dropdown3}")
-        print(f"Date and Time: {datetime}")
+        # print(f"Label: {label}")
+        # print(f"Dropdown 1: {category}")
+        # print(f"Dropdown 2: {subcategory}")
+        # print(f"Dropdown 3: {rating}")
+        # print(f"Date and Time: {type(datetime)}")
 
-        return redirect(url_for('success'))
+        user.add_task(label, category, subcategory, rating )
+
+        return redirect(url_for('addTask'))
     return render_template('addTask.html') 
 
 # Success page that takes the user's name
